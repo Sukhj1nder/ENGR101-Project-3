@@ -135,16 +135,16 @@ int main(){
 		std::cout<<" Error initializing robot"<<std::endl;
 	}
   std::cout<<"Robot initialized"<<std::endl;
-  double vLeft = 20.0;
-  double vRight = 20.0;
+  double vLeft = 10.0;
+  double vRight = 10.0;
   takePicture();
   compressImage(cameraView);
   SavePPMFile("i0.ppm",cameraView);
   while(1){
     takePicture();
     compressImage(cameraView);
-    double whiteError = findWhiteError(cameraView)/10000;
-    double redError = findRedError(cameraView)/1000000;
+    double whiteError = findWhiteError(cameraView)/10000; //adding weighting
+    double redError = findRedError(cameraView)/1000000;	  //play with the numbers if it glitches
     double totalError = whiteError - redError;
     if (totalError == 0){
       totalError = 1;
