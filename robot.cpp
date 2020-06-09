@@ -35,7 +35,7 @@ void compressImage(ImagePPM& image){
   double centroids[numColours][N] = {
     {125, 149, 57}, //1.21
     {255, 255, 255}, //1
-    {226, 46, 1}, //9.61
+    {255, 1, 1},    //255
     {242, 192, 0} //2.5
   };
   double** X = loadImageToMatrix(image);
@@ -47,12 +47,17 @@ void compressImage(ImagePPM& image){
   /* Takes a ratio of red to green and blue for each pixel
      and works out which each individual pixel matches what ratio
   */
-  for(int i = 0; i < 2; i++){
-    ratioCentroids[i] = centroids[i][0]/((centroids[i][1]+centroids[i][2])/2);
+  for(int i = 0; i < numColours; i++){
+    ratioCentroids[i] = centroids[i][0]/((centroids[i][1]+centroids[i][2])/2.0);
   }
   for(int i = 0; i < size; i++){
     min = std::numeric_limits<double>::max();
-    double ratioX = X[i][0]/((X[i][1]+X[i][2])/2);
+    for(int j = 0; j < N; j++){
+      if(X[i][j] == 0){
+        X[i][j] = 1;
+      }
+    }
+    double ratioX = X[i][0]/((X[i][1]+X[i][2])/2.0);
     for(int j = 0; j < numColours; j++){
       A[j] = pow(ratioX - ratioCentroids[j], 2);
       if(A[j] < min){
@@ -70,6 +75,7 @@ void compressImage(ImagePPM& image){
       set_pixel(image, row, column, modifiedX[image.width*row+column][0], modifiedX[image.width*row+column][1], modifiedX[image.width*row+column][2]);
     }
   }
+  SavePPMFile("compressed.ppm",cameraView);
 }
 
 /** Calculates the error of the path taken from the white line*/
