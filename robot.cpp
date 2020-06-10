@@ -1,10 +1,9 @@
 #include "robot.hpp"
 #include <cmath>
 int N = 3; //number of pixel colours
-/** Compresses the image down into 4 colours
- *  White, Green, Yellow, Red as these are the
- *  most common colours in the maze
-*/
+
+
+/** Loads the image into a size*3 matrix for easier editing later*/
 double** loadImageToMatrix(ImagePPM& image){
   int size = image.height*image.width;
   double** X = new double*[size]; //create a matrix X to act as an image we can edit
@@ -26,7 +25,10 @@ double** loadImageToMatrix(ImagePPM& image){
   return X;
 
 }
-
+/** Compresses the image down into 4 colours
+ *  White, Green, Yellow, Red as these are the
+ *  most common colours in the maze
+*/
 void compressImage(ImagePPM& image){
   std::cout<<"Compressing image"<<std::endl;
   int size = image.height*image.width;
@@ -45,7 +47,7 @@ void compressImage(ImagePPM& image){
   int minArg = 0;
   double modifiedX [size][N];
   /* Takes a ratio of red to green and blue for each pixel
-     and works out which each individual pixel matches what ratio
+     and works out which individual pixel matches what ratio
   */
   for(int i = 0; i < numColours; i++){
     ratioCentroids[i] = centroids[i][0]/((centroids[i][1]+centroids[i][2])/2.0);
@@ -69,7 +71,7 @@ void compressImage(ImagePPM& image){
       modifiedX[i][j] = centroids[minArg][j];
     }
   }
-
+  //sets each pixel to it's closest matching centroid colour
   for(int row = 0; row < image.height; row++){
     for ( int column = 0; column < image.width ; column++) {
       set_pixel(image, row, column, modifiedX[image.width*row+column][0], modifiedX[image.width*row+column][1], modifiedX[image.width*row+column][2]);
@@ -110,7 +112,7 @@ int main(){
 		std::cout<<" Error initializing robot"<<std::endl;
 	}
   std::cout<<"Robot initialized"<<std::endl;
-  double vLeft = 10.0;
+  double vLeft = 10.0;	//starting speeds
   double vRight = 10.0;
   takePicture();
   compressImage(cameraView);
@@ -122,7 +124,7 @@ int main(){
     setMotors(vLeft + error,vRight - error);
     std::cout<<" vLeft="<<vLeft + error<<"  vRight="<<vRight - error<<std::endl;
     usleep(10000);
-    std::cout<<"\e[1;1H\e[2J";
+    std::cout<<"\e[1;1H\e[2J"; //clears screen
   } //while
 
 } // main
