@@ -120,7 +120,7 @@ int main(){
   while(1){
     takePicture();
     compressImage(cameraView);
-    double error = findError(cameraView)/10000;
+    double error = findError(cameraView)/1000;
     setMotors(vLeft + error,vRight - error);
     std::cout<<" vLeft="<<vLeft + error<<"  vRight="<<vRight - error<<std::endl;
     usleep(10000);
