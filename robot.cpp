@@ -1,11 +1,16 @@
-
 #include "robot.hpp"
 #include <cmath>
 int N = 3; //number of pixel colours
+
+
+
+/** Loads the image into a size*3 matrix for easier editing later*/
+
 /** Compresses the image down into 4 colours
  *  White, Green, Yellow, Red as these are the
  *  most common colours in the maze
 */
+
 double** loadImageToMatrix(ImagePPM& image){
   int size = image.height*image.width;
   double** X = new double*[size]; //create a matrix X to act as an image we can edit
@@ -27,6 +32,10 @@ double** loadImageToMatrix(ImagePPM& image){
 
 }
 
+/** Compresses the image down into 4 colours
+ *  White, Green, Yellow, Red as these are the
+ *  most common colours in the maze
+*/
 void compressImage(ImagePPM& image){
   std::cout<<"Compressing image"<<std::endl;
   int size = image.height*image.width;
@@ -46,6 +55,7 @@ void compressImage(ImagePPM& image){
   int minArg = 0;
   double modifiedX [size][N];
   /* Takes a ratio of red to green and blue for each pixel
+
      and works out which each individual pixel matches what ratio
   */
   for(int i = 0; i < numColours-1; i++){
@@ -59,6 +69,7 @@ void compressImage(ImagePPM& image){
       }
     }
     double ratioX = X[i][0]/((X[i][1]+X[i][2])/2.0);
+
     if(X[i][0] == X[i][1] == X[i][2] == 1){ //fix to stop robot seeing black as white
       minArg = numColours - 1;
     }
@@ -76,6 +87,7 @@ void compressImage(ImagePPM& image){
     }
   }
 
+  //sets each pixel to it's closest matching centroid colour
   for(int row = 0; row < image.height; row++){
     for ( int column = 0; column < image.width ; column++) {
       set_pixel(image, row, column, modifiedX[image.width*row+column][0], modifiedX[image.width*row+column][1], modifiedX[image.width*row+column][2]);
@@ -110,6 +122,7 @@ double findWhiteError(ImagePPM& image){
   }
   return error;
 }
+
 
 double findRedError(ImagePPM& image){
   std::cout<<"Finding Red Error"<<std::endl;
@@ -199,7 +212,9 @@ int main(){
 		std::cout<<" Error initializing robot"<<std::endl;
 	}
   std::cout<<"Robot initialized"<<std::endl;
-  double vLeft = 10.0;
+
+  double vLeft = 10.0;	//starting speeds
+
   double vRight = 10.0;
   takePicture();
   compressImage(cameraView);
