@@ -102,7 +102,7 @@ double findWhiteError(ImagePPM& image){
   double error = 0;
   double middlePix[] = {(double)image.width/2, (double)image.height}; //reference pixel for error
   double** X = loadImageToMatrix(image);
-  for(int row = 0; row < image.height; row++){
+  for(int row = middlePix[0] - 20; row < image.height; row++){
     for(int column = 0; column < image.width; column++){
       bool isWhite = true;
       int difference = 0;
@@ -147,6 +147,32 @@ double findRedError(ImagePPM& image){
     }
   }
   return error;
+}
+
+/**
+ * checks to see if there is still a path
+ */
+
+bool hasPath(ImagePPM& image){
+  bool hasPath = false;
+  double** X = loadImageToMatrix(image);
+  for(int row = 0; row < image.height; row++){
+    for (int column = 0; column < image.width; column++){
+      bool isWhite = true;
+      for(int i = 0; i < N; i++){
+        if((X[image.width*row+column][i] == 255)&&isWhite){
+          isWhite = true;
+        }
+        else{
+          isWhite = false;
+        }
+      }
+      if (isWhite){
+        hasPath = true;
+      }
+    }
+  }
+  return hasPath;
 }
 /** 
  * Checks to see if the path is blocked by a wall
@@ -208,6 +234,13 @@ int turnControl(ImagePPM& image, double totalError, int count, int turn){
 }
 
 int main(){
+  std::cout<<"Is this challenge? y/n: "<<std::endl;
+  bool challenge = false;
+  char answer;
+  std::cin>>answer;
+  if (answer == 'y'){
+    challenge = true;
+  }
 	if (initClientRobot() !=0){
 		std::cout<<" Error initializing robot"<<std::endl;
 	}
@@ -229,7 +262,10 @@ int main(){
     double totalError = whiteError - redError;
     count = counter(count, totalError);
     turn = turnControl(cameraView, totalError, count, turn);
-    if(pathBlocked(cameraView)){
+    if((pathBlocked(cameraView))||(!hasPath(cameraView)&&!challenge)){
+      if(!challenge){
+        turn = turn*-1;
+      }
       vRight = turn*-5.0;
       vLeft = turn*5.0;
       std::cout<<"Path Blocked"<<std::endl; 
