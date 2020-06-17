@@ -98,7 +98,6 @@ void compressImage(ImagePPM& image){
 
 /** Calculates the error of the path taken from the white line*/
 double findWhiteError(ImagePPM& image){
-  std::cout<<"Finding White Error"<<std::endl;
   double error = 0;
   double middlePix[] = {(double)image.width/2, (double)image.height}; //reference pixel for error
   double** X = loadImageToMatrix(image);
@@ -123,14 +122,15 @@ double findWhiteError(ImagePPM& image){
   return error;
 }
 
-
+/**
+ * Tracks and follows the left wall
+ */
 double findRedError(ImagePPM& image){
-  std::cout<<"Finding Red Error"<<std::endl;
   double error = 0.0;
-  double middlePix[] = {(double)image.width/2, (double)image.height}; //reference pixel for error
+  double middlePix[] = {10.0, (double)image.height}; //reference pixel for error
   double** X = loadImageToMatrix(image);
   for(int row = 25; row < image.height; row++){
-    for(int column = 0; column < image.width; column++){
+    for(int column = 0; column < image.width/2; column++){
       bool isRed = true;
       double difference = 0.0;
       
@@ -181,7 +181,7 @@ bool pathBlocked(ImagePPM& image){
   double middlePix[] = {(double)image.width/2, (double)image.height}; //reference pixel for error
   double** X = loadImageToMatrix(image);
   bool pathBlocked = false;
-  for(int row = middlePix[1]-50; row < image.height; row++){
+  for(int row = middlePix[1]-60; row < image.height; row++){
     for(int column = middlePix[0]-10; column < middlePix[0] + 10; column++){
       bool isRed = true;
       double difference = 0.0;
@@ -254,12 +254,13 @@ int main(){
   SavePPMFile("i0.ppm",cameraView);
   int turn = 1;
   int count = 0;
+  int x;
   while(1){
     takePicture();
     compressImage(cameraView);
     double whiteError = findWhiteError(cameraView)/10000;
-    double redError = findRedError(cameraView)/50000;
-    double totalError = whiteError - redError;
+    double redError = findRedError(cameraView)/10000;
+    double totalError = whiteError + redError;
     count = counter(count, totalError);
     turn = turnControl(cameraView, totalError, count, turn);
     if((pathBlocked(cameraView))||(!hasPath(cameraView)&&!challenge)){
@@ -271,8 +272,18 @@ int main(){
       std::cout<<"Path Blocked"<<std::endl; 
     }
     else{
-      vRight = 10.0;
-      vLeft = 10.0;
+      if ((totalError == 0)&&challenge){ //turns if there is a gap in the wall
+        x++;
+        if (x > 15){
+          vRight = 12;
+          vLeft = 8;
+        }
+      }
+      else{
+        x = 0;
+        vRight = 10.0;
+        vLeft = 10.0;
+      }
       vLeft = vLeft + totalError*vLeft;
       vRight = vRight - totalError*vRight;      
     }
@@ -284,4 +295,5 @@ int main(){
   } //while
 
 } // main
+
 
