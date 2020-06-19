@@ -1,27 +1,28 @@
 ENGR101 Project 3
 Group 12
 
-Team Members & contact info:
-	- Elliot Ramoo
-	- William Mahone
-	- Zunayed Habib
-	- Sukhjinder Singh
+Team Members & contact info:<br/>
+	- Elliot Ramoo<br/>
+	- William Mahone<br/>
+	- Zunayed Habib<br/>
+	- Sukhjinder Singh<br/>
 
 
-Communication tool:
-	- Discord
+Communication tool:<br/>
+	- Discord<br/>
 
 
-Roles:
-	Sukhjinder Singh - Project Manager (organising team meetings, reporting regularly on progress)
-	Elliot Ramoo - Software Architect (writing core code and extending functionality)
-	William Mahone - Software writing, testing and documentation (debugging software and committing to git, writing test cases and documenting performance against milestones)
-	Zunayed Habib - Software writing, testing and documentation (debugging software and committing to git, writing test cases and documenting performance against milestones)
+Roles:<br/>
+	Sukhjinder Singh - Project Manager (organising team meetings, reporting regularly on progress)<br/>
+	Elliot Ramoo - Software Architect (writing core code and extending functionality)<br/>
+	William Mahone - Software writing, testing and documentation (debugging software and committing to git, writing test cases and documenting performance against milestones)<br/>
+	Zunayed Habib - Software writing, testing and documentation (debugging software and committing to git, writing test cases and documenting performance against milestones)<br/>
 
 Github: https://github.com/Sukhj1nder/ENGR101-Project-3
 
 
-Installation Instructions:
+Installation Instructions:<br/>
+
 Step 1: Download Simple Fast Multimedia Library (SFML)
 	- https://www.sfml-dev.org/download/sfml/2.5.1/ Linux Version
 	- Unzip the file, put it in the folder you will store the game files
