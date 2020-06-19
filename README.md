@@ -43,3 +43,5 @@ Step 4: Build and Execute the files
 
 Step 5: Done
 	- It has been run
+	
+Note:(The same code can be used to run core, completion and challenge).
